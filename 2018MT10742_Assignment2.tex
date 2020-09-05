@@ -92,7 +92,7 @@
     \end{center}
 
     Number the types of cores given in the above table as 1, 2, 3 and let \(p_1, p_2, p_3\)
-    denote the probabilities by which a query will be sent to that type of core by the load
+    denote the probabilities by which a query will be sent to a core of that type by the load
     balancer.
 
     Given that the incoming queries form a Poisson process with parameter 
@@ -119,7 +119,6 @@
 
     Then the pdf of \(W\) is given by \(f_W(t) = \rho(\mu - \lambda)e^{-(\mu - \lambda)t}\) when
     \(0 < t < \infty\) and 0 otherwise.
-
     \begin{align*}
         E(W) &= \int_0^\infty t \rho(\mu - \lambda)e^{-(\mu - \lambda)t} \,dt \\
              &= \frac{\rho}{\mu - \lambda} \int_0^\infty e^{-(\mu - \lambda)t} (\mu - \lambda) t \,d[(\mu - \lambda)t] \\
@@ -145,8 +144,13 @@
         \text{In the domain } &16p_1 + 16p_2 + 8p_3 = 1, p_1 < \frac{1}{30}, p_2 < \frac{1}{20}, p_3 < \frac{1}{40}
     \end{align*}
 
-    Solving the equations with the aid of tools available, we find that the minimum expected waiting time
+    Solving the equations with the aid of computational tools available, we find that the minimum expected waiting time
     is approximately 4.77 ms, when \(p_1 \approx 0.020, p_2 \approx 0.035, p_3 \approx 0.013\)
+
+    So, we have the probabilities by which the load balancer should send the queries to
+    cores of type 1 as \(16p_1 \approx 0.327\), cores of type 2 as \(16p_2 \approx 0.564\)
+    and cores of type 3 as \(8p_3 \approx 0.109\) for minimisation of the maximum expected
+    waiting time for each query.
 }
 
 \item Queueing Models
