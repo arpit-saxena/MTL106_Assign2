@@ -4,6 +4,8 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amstext}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
 \setlength{\textheight}{8.875in} \setlength{\textwidth}{6.875in}
 \setlength{\columnsep}{0.3125in} \setlength{\topmargin}{0in}
 \setlength{\headheight}{0in} \setlength{\headsep}{0in}
@@ -153,7 +155,127 @@
     waiting time for each query.
 }
 
-\item Queueing Models
+\item {
+    Queueing Models
+
+    A restaurant on a very busy main road has a parking capacity of 6 cars. People whose car
+    does not get a parking space can't go to eat in the restaurant due to the busyness of
+    the road and the unavailability of any other parking nearby. People in a car are binomially
+    distributed as B(5, 0.5) (0 included since some people just park their car and not eat). 
+    Arrival of cars follows a Poisson process with average inter arrival time 10 minutes.
+    Time spent in the restaurant by one cars passengers is exponentially distributed with 
+    average as 40 minutes.
+
+    Draw the state diagram of the underlying process, and derive the steady state equations.
+    What is the expected number of people in the restaurant in steady state?
+
+    \textbf{Answer}
+
+    By the description, we can observe the cars follow a M/M/6/6 queue.
+    Let \(\lambda\) be the parameter of the arrival process and \(\mu\) be the parameter 
+    of the service time exponential distribution. Then, by the given information,
+    \(\lambda = \frac{1}{10} \text{ min}^{-1}\) and \(\mu = \frac{1}{40} \text{ min}^{-1}\)
+    
+    The state diagram of the underlying birth death process is then given by:
+
+    \begin{tikzpicture}
+        \node[state] (0) {0};
+        \node[state, right=of 0] (1) {1};
+        \node[state, right=of 1] (2) {2};
+        \node[state, right=of 2] (3) {3};
+        \node[state, right=of 3] (4) {4};
+        \node[state, right=of 4] (5) {5};
+        \node[state, right=of 5] (6) {6};
+
+        \draw[every loop]
+            (0) edge[bend left, auto=left] node {\(\lambda\)} (1)
+            (1) edge[bend left, auto=left] node {\(\lambda\)} (2)
+            (2) edge[bend left, auto=left] node {\(\lambda\)} (3)
+            (3) edge[bend left, auto=left] node {\(\lambda\)} (4)
+            (4) edge[bend left, auto=left] node {\(\lambda\)} (5)
+            (5) edge[bend left, auto=left] node {\(\lambda\)} (6)
+            
+            (6) edge[bend left, auto=left] node{\(6\mu\)} (5)
+            (5) edge[bend left, auto=left] node{\(5\mu\)} (4)
+            (4) edge[bend left, auto=left] node{\(4\mu\)} (3)
+            (3) edge[bend left, auto=left] node{\(3\mu\)} (2)
+            (2) edge[bend left, auto=left] node{\(2\mu\)} (1)
+            (1) edge[bend left, auto=left] node{\(\mu\)} (0);
+    \end{tikzpicture}
+
+    Here the numbers in each state indicate the number of cars parked in the parking lot.
+    Let \(\{X_t \,|\, t \in \mathbb{R}\}\) be the underlying stochastic process where \(X_t\)
+    denotes the number of cars parked in the parking lot at time \(t\).
+
+    Define \(\pi_n = \lim_{t \to \infty} \text{Prob}(X_t = n)\). Then using Kolmogorov, forward
+    equations and letting \(t \to \infty\), we get:
+    \begin{align*}
+        0 &= -\lambda\pi_0 + \mu\pi_1 \\
+        0 &= \lambda \pi_{i-1} + (i+1)\mu \pi_{i+1} - (\lambda + i \mu) \pi_i, 1 \leq i \leq 5 \\
+        0 &= \lambda \pi_5 - 5\mu \pi_6 \\
+    \end{align*}
+
+    From the first equation, we get \(\pi_1 = \frac{\lambda}{\mu}\pi_0\).
+    For \(i = 1\):
+    \begin{align*}
+        0 &= \lambda \pi_{0} + 2\mu \pi_{2} - (\lambda + \mu) \pi_1 \\
+        \implies 0 &= \lambda \pi_{0} + 2\mu \pi_{2} - (\lambda + \mu) \frac{\lambda}{\mu}\pi_0 \\
+        \implies 2\mu \pi_2 &= \frac{\lambda^2}{\mu} \pi_0 \\
+        \implies \pi_2 &= \frac{\lambda^2}{2\mu^2} \pi_0
+    \end{align*}
+
+    By induction, we can show that
+    \[\pi_i = \frac{\lambda^i}{i!\,\mu^i} \pi_0,\, 1 \leq i \leq 5\]
+
+    And then using the last equation, we get:
+    \begin{align*}
+        0 &= \lambda \pi_5 - 5\mu \pi_6 \\
+        \implies 0 &= \lambda \frac{\lambda^5}{5!\,\mu^5} \pi_0 - 6\mu \pi_6 \\
+        \implies 6\mu \pi_6 &= \frac{\lambda^6}{5!\mu^5} \pi_0 \\
+        \implies \pi_6 &= \frac{\lambda^6}{6!\mu^6} \pi_0
+    \end{align*}
+
+    Define \(\rho = \frac{\lambda}{\mu}\)
+    Using the fact that  the total probability must be 1, which is also called the
+    normalising condition, we get:
+    \begin{align*}
+        \sum_{n = 0}^{6} \frac{\rho^n}{n!} \pi_0 &= 1 \\
+        \implies \pi_0 &= \frac{1}{\sum_{n = 0}^{6} \frac{\rho^n}{n!}}
+    \end{align*}
+
+    Let \(X\) be the random variable denoting the number of cars in the parking lot
+    at steady state. Then,
+    \begin{align*}
+        E(X) &= \sum_{n = 0}^{6} n \cdot \frac{\rho^n}{n!} \pi_0 \\
+             &= \sum_{n = 0}^{6} n \cdot \frac{\frac{\rho^n}{n!}}{\sum_{n = 0}^{6} \frac{\rho^n}{n!}} \\
+             &= \rho \cdot \frac{\sum_{n=1}^{6} \frac{\rho^{n-1}}{(n-1)!}}{\sum_{n = 0}^{6} \frac{\rho^n}{n!}} \\
+             &= \rho \cdot \frac{\sum_{n=0}^{5} \frac{\rho^{n}}{n!}}{\sum_{n = 0}^{6} \frac{\rho^n}{n!}} \\
+             &= \rho \left(1 - \frac{\frac{\rho^6}{6!}}
+                                    {\sum_{n = 0}^{6} \frac{\rho^n}{n!}}\right)        
+    \end{align*}
+
+    Using \(\lambda = \frac{1}{10}, \mu = \frac{1}{40}\) we get \(\rho = 4\). Then we can
+    solve the solution using a calculator and get \(E(X) \approx 3.531\)
+
+    Now, we have the expected number of cars in steady state, but we need to calculate the
+    expected number of customers in the restaurant in steady state.
+
+    Let \(N\) be the random variable denoting the number of customers in the restaurant in
+    steady state. Let \(N_i\) be the number of passengers in car \(i\), then we have 
+    \(N = \sum_{i = 0}^{X} N_i\), where \(X\) is the random variable denoting the number of cars
+    in steady state. We know that \(N_i\)'s are iid random variables which 
+    are distributed as \(B(5, 0.5)\) from which we get \(E(N_i) = 5 \times 0.5 = 2.5\)
+
+    Using Wald's equation since \(N_i\)'s are iid and also independent from \(X\), we get
+    \begin{align*}
+        E(N) &= E(N_1) \times E(X) \\
+             &\approx 2.5 \times 3.531 \\
+             &= 8.828
+    \end{align*}
+
+    Therefore, the expected number of customers in the restaurant in steady state is
+    approximately 9.
+}
 
 \end{enumerate}
 
