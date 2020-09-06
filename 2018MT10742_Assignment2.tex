@@ -188,8 +188,95 @@
 
 \item DTMC
 
-\item CTMC
+\item {
+    CTMC
 
+    Consider a  modified version of Conway's game of life. In this simplified version,
+    we model using a birth death process where the maximum number of entities allowed in
+    the system is n. When the number of entities in the system is \(i\), the birth rate is
+    given as \(1 - \frac{i}{n}\) and the death rate is given as \(\frac{i}{n}\). These
+    model the qualities that birth rate decreases with increasing population and death
+    rate increases due to overpopulation.
+
+    Give the diagrammatic representation of the process. Find the steady state distribution
+    of the system, and the expected number of entities in steady state.
+
+    \textbf{Answer}
+
+    The diagrammatic representation is given below:
+
+    \begin{tikzpicture}
+        \node[state] (0) {0};
+        \node[state, right=of 0] (1) {1};
+        \node[state, right=of 1] (2) {2};
+        \node[right=of 2] (dots1) {\(\cdots\)};
+        \node[state, right=of dots1] (i) {i};
+        \node[right=of i] (dots2) {\(\cdots\)};
+        \node[state, right=of dots2] (n) {n};
+
+        \draw[every loop]
+            (0) edge[bend left, auto=left] node {1} (1)
+            (1) edge[bend left, auto=left] node {\(1 - \frac{1}{n}\)} (2)
+            (2) edge[bend left, auto=left] node {} (dots1)
+            (dots1) edge[bend left, auto=left] node {} (i)
+            (i) edge[bend left, auto=left] node {\(1 - \frac{i}{n}\)} (dots2)
+            (dots2) edge[bend left, auto=left] node {\(1 - \frac{n - 1}{n}\)} (n)
+            
+
+            (2) edge[bend left, auto=left] node{\(\frac{2}{n}\)} (1)
+            (1) edge[bend left, auto=left] node{\(\frac{1}{n}\)} (0)
+            (dots1) edge[bend left, auto=left] node{} (2)
+            (i) edge[bend left, auto=left] node{\(\frac{i}{n}\)} (dots1)
+            (dots2) edge[bend left, auto=left] node{} (i)
+            (n) edge[bend left, auto=left] node{\(1\)} (dots2);
+    \end{tikzpicture}
+
+    Let \(X_t\) denote the number of entities in the system at time \(t\).
+    Let \(\pi\) denote the stationary probabilities of the system, i.e.,
+    \(\pi = (\pi_0, \pi_1, \ldots, \pi_n)\) where \(\pi_i = \lim_{t \to \infty} P(X_t = i)\)
+
+    Using the general formula for a birth death process, we have
+    \begin{align*}
+        \pi_i &= \frac{\lambda_0 \lambda_1 \ldots \lambda_{i-1}}{\mu_1 \mu_2 \ldots \mu_i} \pi_0 \\
+              &= \frac{1(1 - \frac{1}{n})\ldots(1 - \frac{i - 1}{n})}{\frac{1}{n}\frac{2}{n}\ldots\frac{i}{n}} \pi_0 \\
+              &= \frac{n(n-1)\ldots(n - i + 1)}{i!} \pi_0\\
+              &= \frac{n!}{i! (n - i)!} \pi_0 \\
+        \implies \pi_i &= {n \choose i} \pi_0 \,,\,i = 1, 2, \ldots, n
+    \end{align*}
+
+    Now we use the normalising condition:
+    \begin{align*}
+        \sum_{i = 0}^{n} \pi_i &= 1 \\
+        \implies \pi_0 + \sum_{i = 1}^{n} \pi_i &= 1 \\
+        \implies \pi_0 + \sum_{i = 1}^{n} {n \choose i} \pi_0 &= 1 \\
+        \implies \sum_{i = 0}^{n} {n \choose i} \pi_0 &= 1 \\
+        \implies 2^n \pi_0 &= 1 \\
+        \implies \pi_0 &= 2^{-n} \\
+        \implies \pi_i &= {n \choose i} 2^{-n} \,,\, i = 0, 1, \ldots n
+    \end{align*}
+
+    Let \(X\) be the random variable denoting the number of entities in the system in
+    steady state. Then \(P(X = i) = \pi_i \,,\, i = 0, 1, \ldots, n\)
+
+    \begin{align*}
+        E(X) &= \sum_{i = 0}^n i \pi_i \\
+             &= \sum_{i = 0}^n i {n \choose i} 2^{-n} \\
+             &=  2^{-n} \sum_{i = 0}^n i {n \choose i}
+    \end{align*}
+
+    To calculate \(\sum_{i = 0}^n i {n \choose i}\) we use the binomial formula as:
+    \begin{align*}
+        (1 + x)^n &= \sum_{i = 0}^{n} {n \choose i} x^i \\
+        \intertext{Differentiating wrt \(x\) on both sides, we get}
+        n (1 + x)^{n - 1} &= \sum_{i = 1}^{n} i {n \choose i} x^{i - 1} \\
+        \intertext{Now putting x = 1 implies}
+        n 2^{n-1} &= \sum_{i = 1}^n i {n \choose i} \\
+        n 2^{n-1} &= \sum_{i = 0}^n i {n \choose i}
+    \end{align*}
+
+    Substituting in the above equation, we get
+    \[E(X) = 2^{-n} \cdot n 2^{n - 1} = \frac{n}{2}\]
+}
 
 \item CTMC
 
