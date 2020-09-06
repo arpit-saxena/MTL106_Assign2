@@ -107,8 +107,34 @@
     We now model each core as a M/M/1 queue. Generically, let's take the arrival process
     parameter as \(\lambda\) and the service time parameter as \(\mu\).
 
-    Using the result derived in class, let \(W\) be the waiting time for a query, then
-    its CDF in the steady state is given as
+    Let \(W\) be the waiting time for a query, then \(P(W < 0) = 0\) and \(P(W = 0) = \rho\)
+    where \(\rho = \frac{\lambda}{\mu}\).
+
+    For \(W > 0\), there has to be atleast one person in the system. Assuming there are n
+    people in the system, we have \(W = \widetilde{S_1} + S_2 + \cdots + S_n\), where 
+    \(\widetilde{S_1}\) is the time left for query that is already running, and \(S_2 \cdots S_n\)
+    are the running times for the remaining queued queries.
+
+    Since service times are exponentially distributed, which has memoryless property,
+    \(\widetilde{S_1}\) is also exponentially distributed with parameter \(\mu\)
+
+    Therefore, \(W / N = n \sim Gamma(n, \mu)\)  since it is a sum of \(n\) independent
+    exponentially distributed random variables with parameter \(\mu\).
+
+    For \(t > 0\),
+    \begin{align*}
+        P(W \leq t) &= \sum_{n=1}^{\infty} P(W \leq t / N = n) P(N = n) \\
+                    &= 1 - \rho + \sum_{n=1}^{\infty} \int_0^{t} \frac{\mu^n x^{n-1}e^{-\mu x}}{(n - 1)!}\,dx\,
+                        (1 - \rho) \rho^n \\
+        \intertext{Now, taking summation inside the integral, we get}
+        P(W \leq t) &= 1 - \rho + \int_0^t \sum_{n=1}^{\infty} \frac{(\mu x \rho)^{n-1}}{(n - 1)!} e^{-\mu x}\,dx\,(1-\rho)\mu\rho \\
+                    &= 1 - \rho + \int_0^t \mu \rho e^{\mu x \rho} e^{-\mu x} \,dx\, (1 -\rho) \\
+                    &= 1 - \rho + \mu \rho (1 - \rho) \frac{e^{-\mu(1-\rho)t} - 1}{\mu(\rho - 1)} \\
+                    &= 1 - \rho + \rho (1 - e^{-(\mu - \lambda)t}) \\
+                    &= 1 - \rho e^{-(\mu - \lambda)t}
+    \end{align*}
+
+    Therefore, the CDF of \(W\) in the steady state is given by
     \[
         P(W \leq t) = \begin{cases}
                         0 & t < 0 \\
