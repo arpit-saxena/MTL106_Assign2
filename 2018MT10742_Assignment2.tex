@@ -278,8 +278,79 @@
     \[E(X) = 2^{-n} \cdot n 2^{n - 1} = \frac{n}{2}\]
 }
 
-\item CTMC
+\item {
+    CTMC
 
+    Consider a Markov process where states are \(0, 1, 2, \ldots\) and any state \(i\)
+    can move to state \(i + 1\) and \(i + 2\) both with rate \(\lambda\). Also, a state
+    \(i\) can move to \(i - 1\) with rate \(\mu\). Give a diagrammatic representation of
+    the process. Find the expected state in which the process would be in steady state
+
+    \textbf{Answer}
+
+    The diagrammatic representation of the process can be shown as:
+
+    \begin{center}
+    \begin{tikzpicture}
+        \node[state] (0) {0};
+        \node[state, right=of 0] (1) {1};
+        \node[state, right=of 1] (2) {2};
+        \node[right=of 2] (dots) {\(\cdots\)};
+
+        \draw[every loop]
+            (0) edge[bend left, auto=left] node {\(\lambda\)} (1)
+            (0) edge[bend left, auto=left] node {\(\lambda\)} (2)
+            (1) edge[bend left, auto=left] node {\(\lambda\)} (2)
+            (1) edge[bend left, auto=left] node {\(\lambda\)} (dots)
+            (2) edge[bend left, auto=left] node {} (dots)
+            
+            (dots) edge[bend left, auto=left] node{} (2)
+            (2) edge[bend left, auto=left] node{\(\mu\)} (1)
+            (1) edge[bend left, auto=left] node{\(\mu\)} (0);
+    \end{tikzpicture}
+    \end{center}
+
+    At steady state, assume the probability vector to be \(\pi\), then using the Kolmogorov
+    forward equations and setting rate of change of P to be 0, we get
+    \begin{align*}
+        0 &= -2\lambda\pi_0 + \mu \pi_1 \\
+        0 &= \lambda\pi_0 + \mu\pi_2 - (2\lambda + \mu)\pi_1 \\
+        0 &= \lambda\pi_{i-2} + \lambda\pi_{i-1} + \mu\pi_{i+1} - (2\lambda + \mu)\pi_i
+    \end{align*}
+
+    Let us define \(P(x) = \sum_{n = 0}^{\infty} \pi_n x^n\). Then, we have
+    \begin{align*}
+        P(x) &= \pi_0 + \pi_1 x + \pi_2 x^2 + \cdots + \pi_{i-2}x^{i-2} + \cdots \\
+        \lambda x^3 P(x) &= \lambda \pi_0 x^3  + \lambda \pi_1 x^4 + \lambda \pi_2 x^5+ \cdots + \lambda\pi_{i-2}x^{i+1} + \cdots \\
+        \lambda x^2 P(x) &= \lambda \pi_0 x^2 + \lambda \pi_1 x^3 + \lambda \pi_2 x^4 + \cdots + \lambda\pi_{i-1}x^{i+1} + \cdots \\
+        -(2\lambda + \mu)x P(x) &= -(2\lambda + \mu) \pi_0 x -(2\lambda + \mu) \pi_1 x^2 - \cdots
+                                   -(2\lambda + \mu)\pi_{i}x^{i+1} + \cdots \\
+        \mu P(x) &= \mu\pi_0 + \mu\pi_1 x + \mu\pi_2 x^2 + \cdots + \mu\pi_{i+1}x^{i+1} + \cdots \\
+        \intertext{Adding the last 4 equations and using the equations obtained earlier we get}
+        \left\{\lambda x^3 + \lambda x^2 - (2\lambda + \mu)x + \mu\right\}&P(x) = \mu \pi_0 - \mu \pi_0 x \\
+        \implies P(x) &= \frac{\mu \pi_0 (1 - x)}{\lambda x^3 + \lambda x^2 - (2\lambda + \mu)x + \mu} \\
+        \implies P(x) &= \frac{\mu \pi_0 (1 - x)}{(x - 1)(\lambda x^2 + 2 \lambda x - \mu)} \\
+        \implies P(x) &= \frac{-\mu \pi_0 }{\lambda x^2 + 2 \lambda x - \mu}
+    \end{align*}
+
+    Using the definition of \(P(x)\), we get \(P(1) = \sum_{n = 0}^{\infty} \pi_n = 1\) and 
+    let \(X\) be the distribution in steady state, then \(P'(1) = \sum_{n = 0}^{\infty} n \pi_n = E(X)\) 
+
+    Using these conditions, we have 
+    \begin{align*}
+        P(1) &= 1 \\
+        \implies \frac{-\mu \pi_0 }{3 \lambda - \mu} &= 1 \\
+        \implies \pi_0 &= 1 - \frac{3 \lambda}{\mu} \\
+        P'(x) &= \frac{\mu \pi_0}{(\lambda x^2 + 2 \lambda x - \mu)^2} (2 \lambda x + 2 \lambda) \\
+        \implies P'(1) &= \frac{\mu \pi_0}{(3\lambda - \mu)^2} \cdot 4\lambda \\
+        \intertext{Substituting \(\pi_0 = \frac{\mu - 3\lambda}{\mu}\), we get}
+        P'(1) &= \frac{\mu - 3\lambda}{(3\lambda - \mu)^2} \cdot 4\lambda \\
+        P'(1) &= \frac{4\lambda}{\mu - 3\lambda} \\
+        \implies E(X) &= \frac{4\lambda}{\mu - 3\lambda}
+    \end{align*}
+
+    Obviously, this only exists when \(\mu - 3\lambda > 0 \implies \frac{\lambda}{\mu} < \frac{1}{3}\)
+}
 
 \item {
     Queueing Models
