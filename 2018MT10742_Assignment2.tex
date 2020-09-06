@@ -49,7 +49,141 @@
 
 \item Stochastic Processes
 
-\item DTMC
+\item {
+    DTMC
+
+    \begin{enumerate}
+        \item {
+            The transition matrix \(P\) of a Discrete Time Markov Chain is given as:
+            \[P = \begin{pmatrix}
+                0.6 & 0.2 & 0.1 & 0 & 0 & 0.1 & 0 & 0 \\
+                0.1	& 0.1 & 0.2 & 0.2 & 0 & 0 & 0.4 & 0 \\
+                0.2 & 0.3 & 0 & 0 & 0 & 0.1 & 0.2 & 0.2 \\
+                0.5 & 0.2 & 0.1 & 0.1 & 0 & 0.1 & 0 & 0 \\
+                0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.3 \\
+                0.3 & 0 & 0.3 & 0.2 & 0.1 & 0 & 0 & 0.1 \\
+                0 & 0 & 0 & 0 & 0.5 & 0.4 & 0 & 0.1 \\
+                0 & 0.1 & 0.1 & 0.1 & 0 & 0.2 & 0.2 & 0.3
+            \end{pmatrix}\]
+            Without calculating the stationary probabilities, find out whether stationary
+            distribution exists for this system or not.
+        }
+        \item {
+            Consider a DTMC of \(n\) states. We know that the transition matrix for the
+            DTMC is diagonalisable and absolute value of all of its eigenvalues is less than 1.
+            Will the limiting distribution of this system exist?
+
+            Use the result to find the existence of limiting distribution of a DTMC with
+            the following transition matrix:
+            \[\begin{pmatrix}
+                0 & \frac{2}{3} & \frac{1}{3} \\
+                \frac{1}{2} & 0 & \frac{1}{2} \\
+                \frac{1}{2} & \frac{1}{2} & 0
+            \end{pmatrix}\]
+        }
+    \end{enumerate}
+
+    \textbf{Answer}
+
+    \begin{enumerate}
+        \item {
+            Let \(\pi\) be the stationary probabilities for the system. i.e.
+            \(\pi = (\pi_0, \pi_1, \ldots, \pi_{n-1})\)
+
+            Also, we have \(\pi P = \pi\) since the distribution is taken as stationary
+            \begin{align*}
+                \pi P &= \pi \\
+                \implies \pi (P - I) &= 0 \\
+                \intertext{Thus we have a homogenous system of linear equations. Since we are
+                after a non-trivial solution (as row sum of \(\pi\)= 1), we have the condition}
+                det(P - I) &= 0
+            \end{align*}
+
+            Note that we have an overconstrained system of linear equations, given by
+            \(\pi P = \pi, \sum_{i=0}^{n-1} \pi_i = 1\) along with the condition that
+            \(\pi_i \geq 0 \,\forall\, i = 0, 1, \ldots, n - 1\)
+
+            Thus, the condition that \(det(P - I) = 0\) is necessary for stationary distribution
+            to exist but not sufficient.
+            
+            For the given transition matrix:
+            \begin{align*}
+                \det(P - I) &= \begin{vmatrix}
+                    -0.4 & 0.2 & 0.1 & 0 & 0 & 0.1 & 0 & 0 \\
+                    0.1	& -0.9 & 0.2 & 0.2 & 0 & 0 & 0.4 & 0 \\
+                    0.2 & 0.3 & -1 & 0 & 0 & 0.1 & 0.2 & 0.2 \\
+                    0.5 & 0.2 & 0.1 & -0.9 & 0 & 0.1 & 0 & 0 \\
+                    0.1 & 0.1 & 0.1 & 0.1 & -0.9 & 0.1 & 0.1 & 0.3 \\
+                    0.3 & 0 & 0.3 & 0.2 & 0.1 & -1 & 0 & 0.1 \\
+                    0 & 0 & 0 & 0 & 0.5 & 0.4 & -1 & 0.1 \\
+                    0 & 0.1 & 0.1 & 0.1 & 0 & 0.2 & 0.2 & -0.7
+                \end{vmatrix} \\
+                        &\neq 0
+            \end{align*}
+
+            This tells us that the given DTMC will not have a stationary distribution.
+        }
+        \item {
+            Let \(P\) denote the transition probability matrix for the DTMC. Then we know
+            that \(P\) is a \(n \times n\) matrix. Given that it is diagonalisable,
+            \(\exists \text{ invertible } A_{n \times n}\) such that \(P = A \Lambda A^{-1}\)
+            where
+            \[\begin{pmatrix}
+                \lambda_1 & 0         & \dots  & 0 \\
+                0         & \lambda_2 & \dots  & 0 \\
+                \vdots    &           & \ddots & \vdots\\
+                0         & \dots     & 0      & \lambda_n 
+            \end{pmatrix}\]
+            where \(\lambda_1, \ldots, \lambda_n\) are the eigenvalues of the matrix \(P\).
+            We are given that \(|\lambda_i| < 1, i = 1, 2, \ldots, n  \)
+            
+            \begin{align*}
+                P &= A \Lambda A^{-1} \\
+                \implies P^2 &= A \Lambda A^{-1} A \Lambda A^{-1} \\
+                             &= A \Lambda ^ 2 A^{-1} \\
+                \intertext{Continuing like this, we get}
+                P^m &= A \Lambda ^ m A^{-1} \\
+            \end{align*}
+
+            Since \(\Lambda\) is a diagonal matrix, \(\Lambda^m\) can be easily calculated and is given
+            by:
+            \begin{align*}
+                \Lambda^m &= \begin{pmatrix}
+                    \lambda_1^m & 0         & \dots  & 0 \\
+                    0         & \lambda_2^m & \dots  & 0 \\
+                    \vdots    &           & \ddots & \vdots\\
+                    0         & \dots     & 0      & \lambda_n^m
+                \end{pmatrix} \\
+                \implies \lim_{m \to \infty} \Lambda^m &= \begin{pmatrix}
+                    \lim_{m \to \infty}\lambda_1^m & 0         & \dots  & 0 \\
+                    0         & \lim_{m \to \infty} \lambda_2^m & \dots  & 0 \\
+                    \vdots    &           & \ddots & \vdots\\
+                    0         & \dots     & 0      & \lim_{m \to \infty} \lambda_n^m
+                \end{pmatrix} \\
+                \intertext{\(|\lambda_i| \leq 1 \implies \lim_{m \to \infty}\lambda_i^m = 0\) thus we have}
+                \lim_{m \to \infty} \Lambda^m &= 0 \\
+                \implies \lim_{m \to \infty} P^m &= \lim_{m \to \infty} A \Lambda^m A^{-1} = 0
+            \end{align*}
+
+            Thus, the \(m\)-step transition probability matrix \(P^{(m)} = P^m\) goes to
+            0 as \(m \to \infty\) which implies that the limiting distribution does not
+            exist.
+
+            Now, given the transition matrix 
+            \[\begin{pmatrix}
+                0 & \frac{2}{3} & \frac{1}{3} \\
+                \frac{1}{2} & 0 & \frac{1}{2} \\
+                \frac{1}{2} & \frac{1}{2} & 0
+            \end{pmatrix}\]
+            
+            The eigenvalues of the given matrix are \(\pm \frac{1}{2}, 1\).
+            Since it has 3 distinct eigenvalues, it must be diagonalisable.
+            Two diagonal entries of the eigenvalue matrix will go to zero, and the other
+            would be 1. Thus \(\lim_{m \to \infty} P^m\) exists and thus the limiting 
+            distribution for the given DTMC exists.
+        }
+    \end{enumerate}
+}
 
 
 \item DTMC
