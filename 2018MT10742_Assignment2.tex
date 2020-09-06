@@ -40,7 +40,33 @@
 
 
 
-\item Basic Probability
+\item {
+    Basic Probability
+
+    Let \(\Omega = \{0, 1, 2, 3, 4\}\) be the sample space. Consider the \(\sigma\)-field
+    \[\mathcal{F} = \{\varnothing, \{0\}, \{1\}, \{0, 1\}, \{0, 2, 3, 4\}, \{1, 2, 3, 4\}, \{2, 3, 4\}, \Omega\}\]
+    and a function P from \(\mathcal{F}\) to \([0, 1]\) with \(P(\{0\}) = 0.4\),
+    \(P(\{1\}) = 0.3\) and \(P(\{2, 3, 4\}) = x\). Find the value of \(x\) such that \(P\)
+    is a probability on \((\Omega, \mathcal{F})\). Find all the values of this function.
+
+    \textbf{Answer}
+
+    Since we have that \(P(\Omega) = 1\) and \(\{0\}, \{1\}, \{2, 3, 4\}\) are disjoint
+    events whose union is \(\Omega\), we have
+    \begin{align*}
+        P(\{0\}) + P(\{1\}) + P()\{2, 3, 4\}) &= 1 \\
+        \implies 0.3 + 0.4 + x &= 1 \\
+        \implies x &= 0.3
+    \end{align*}
+
+    Using this, we can calculate the value of \(P\) for all other elements in \(\mathcal{F}\)
+    \begin{align*}
+        P(\{0, 1\}) &= P(\{0\}) + P(\{1\}) = 0.7 \\
+        P(\{0, 2, 3, 4\}) &= 1- P(\{1\}) = 1 - 0.3 = 0.7 \\
+        P(\{1, 2, 3, 4\}) &= 1 - P(\{0\}) = 1 - 0.4 = 0.6 \\
+        P(\{2, 3, 4\}) &= 1 - P(\{0, 1\}) = 1 - 0.7 = 0.3
+    \end{align*}
+}
 
 \item {
     Random Variable/Function of a Random Variable
@@ -203,7 +229,52 @@
     \end{enumerate}
 }
 
-\item Stochastic Processes
+\item {
+    Stochastic Processes
+
+    Consider the process \(X(t) = At + \frac{B}{t} \,,\, t > 0\) where A and B are iid random variables
+    with mean 0 and variance 1. Is \(\{X_t : t > 0\}\) wide-sense stationary?
+
+    \textbf{Answer}
+
+    We need to check 3 things to check for wide-sense stationarity which are checked
+    as follows:
+    \begin{enumerate}
+        \item {
+            \(E(X(t)\) is not a function of \(t\)
+
+            Here, 
+            \begin{align*}
+                E(X(t)) &= E\left(At + \frac{B}{t}\right) \\
+                        &= t E(A) + \frac{E(B)}{t} \tag*{(Using linearity of expectation)} \\
+                        &= 0 \tag*{(Since E(A) = E(B) = 0 is given)}
+            \end{align*}
+        }
+        \item {
+            \(E(X^2(t) < \infty)\)
+
+            In this case, we have \(E(A^2) = var(A) + [E(A)]^2 = 1 = E(B^2)\), then
+            \begin{align*}
+                E(X^2(t)) &= E\left(A^2t^2 + \frac{B^2}{t^2} + 2AB\right) \\
+                \intertext{Now using linearity of expectations, \(E(A^2) = 1 = E(B^2)\) and \(E(AB) = E(A)E(B) = 0\)}
+                E(X^2(t)) &= t^2 + \frac{1}{t^2} < \infty \,\forall\, t > 0
+            \end{align*}
+        }
+        \item {
+            \(Cov(X(t), X(s))\) depends only on \(|t - s|\)
+
+            \begin{align*}
+                Cov(X(t), X(s)) &= E(X(t)X(s)) - E(x(t))E(X(s)) \\
+                                &= E\left(A^2st + \frac{B^2}{st} + AB\frac{t}{s} + AB\frac{t}{s}\right) \\
+                                &= st + \frac{1}{st}
+            \end{align*}
+
+            Thus we observe that \(Cov(X(t), X(s))\) is not a function of only \(|s - t|\)
+        }
+    \end{enumerate}
+
+    Thus, the given stochastic process is not wide sense stationary.
+}
 
 \item {
     DTMC
