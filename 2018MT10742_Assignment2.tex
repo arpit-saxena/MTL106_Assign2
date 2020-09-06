@@ -5,6 +5,7 @@
 \usepackage{amssymb}
 \usepackage{amstext}
 \usepackage{tikz}
+\usepackage{multirow}
 \usetikzlibrary{automata, positioning}
 \setlength{\textheight}{8.875in} \setlength{\textwidth}{6.875in}
 \setlength{\columnsep}{0.3125in} \setlength{\topmargin}{0in}
@@ -186,7 +187,66 @@
 }
 
 
-\item DTMC
+\item {
+    DTMC
+
+    Quantum computers can be modelled using Quantum automata, which are a quantum analog
+    of probabilistic automata. A finite probabilistic automaton consists of a set of states
+    and the probability of transition from one state to the other depends on the state itself
+    as well as the input symbol. Consider an automata with input symbol set as \(\{0, 1\}\)
+    and the transition probabilities as:
+    \begin{enumerate}
+        \item {
+            For input 0:
+            \[\begin{pmatrix}
+                0.5 & 0.5 & 0 \\
+                0 & 0.5 & 0.5 \\
+                0.5 & 0 & 0.5
+            \end{pmatrix}\]
+        }
+        \item {
+            For input 1:
+            \[\begin{pmatrix}
+                0 & 0.5 & 0.5 \\
+                0.5 & 0 & 0.5 \\
+                0.5 & 0.5 & 0
+            \end{pmatrix}\]
+        }
+    \end{enumerate}
+    The probability for states 0, 1, 2 to accept are 0.3, 0.6, 0.2 respectively.
+    What is the probability that the automata accepts the string 0101? Assume the starting
+    state is 0.
+
+    Note: While this is not a DTMC in itself, it is a very useful extension of the 
+    concept and has wide ranging applications in quantum computing, machine learning, etc.
+
+    \textbf{Answer}
+
+    We can tabulate the states the automata might be in along with the probabilities.
+
+    \begin{center}\begin{tabular}{| c | c | c | c |}
+        \hline
+        Input & P(state 0) & P(state 1) & P(state 2) \\
+        \hline
+        Initial & 1 & 0 & 0 \\
+        \hline
+        0 & \(0.5 \times 1 = 0.5\) & \(0.5 \times 1 = 0.5\) & \(0 \times 0 = 0\) \\
+        \hline
+        1 & \(0.5 \times 0.5 + 0.5 \times 0 \) & \(0.5 \times 0.5 + 0.5 \times 0\) & \(0.5 \times 0.5 + 0.5 \times 0.5\) \\
+          & \(= 0.25\) & \(= 0.25\) & \(= 0.5\) \\
+        \hline
+        0 & \(0.5 \times 0.25 + 0.5 \times 0.25\) & \(0.5 \times 0.25 + 0.5 \times 0.5\) & \(0.5 \times 0.25 + 0.5 \times 0.5\) \\
+        0 & \(= 0.25\) & \(= 0.375\) & \(= 0.375\) \\
+        \hline
+        1 & \(0.5 \times 0.375 + 0.5 \times 0.375\) & \(0.5 \times 0.25 + 0.5 * 0.375\) & \(0.5 \times 0.25 + 0.5 \times 0.375\) \\
+        1 & \(= 0.375\) & \(= 0.3125\) & \(= 0.3125\) \\
+        \hline
+    \end{tabular}\end{center}
+
+    Taking into account the acceptance probability, we get the probability that the given
+    string is accepted by the automata as 
+    \(0.375 \times 0.3 + 0.3125 \times 0.6 + 0.3125 \times 0.2 = 0.3625\)
+}
 
 \item {
     CTMC
@@ -205,7 +265,7 @@
 
     The diagrammatic representation is given below:
 
-    \begin{tikzpicture}
+    \begin{center}\begin{tikzpicture}
         \node[state] (0) {0};
         \node[state, right=of 0] (1) {1};
         \node[state, right=of 1] (2) {2};
@@ -229,7 +289,7 @@
             (i) edge[bend left, auto=left] node{\(\frac{i}{n}\)} (dots1)
             (dots2) edge[bend left, auto=left] node{} (i)
             (n) edge[bend left, auto=left] node{\(1\)} (dots2);
-    \end{tikzpicture}
+    \end{tikzpicture}\end{center}
 
     Let \(X_t\) denote the number of entities in the system at time \(t\).
     Let \(\pi\) denote the stationary probabilities of the system, i.e.,
